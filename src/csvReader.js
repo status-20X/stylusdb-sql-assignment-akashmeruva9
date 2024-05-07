@@ -4,9 +4,8 @@ const fs = require('fs');
 const csv = require('csv-parser');
 
 function readCSV(filePath) {
-    const results = [];
-
     return new Promise((resolve, reject) => {
+        const results = [];
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (data) => results.push(data))
@@ -16,7 +15,7 @@ function readCSV(filePath) {
             .on('error', (error) => {
                 reject(error);
             });
-    },10000);
+    });
 }
 
 module.exports = readCSV;
