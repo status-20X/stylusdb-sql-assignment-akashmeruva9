@@ -49,12 +49,12 @@ async function executeSELECTQuery(query) {
 
     // Select the specified fields
     return filteredData.map(row => {
-        const selectedRow = {};
+        const selectedRow2 = {};
         fields.forEach(field => {
             // Assuming 'field' is just the column name without table prefix
-            selectedRow[field] = row[field];
+            selectedRow2[field] = row[field];
         });
-        return selectedRow;
+        return selectedRow2;
     });
 }
 
