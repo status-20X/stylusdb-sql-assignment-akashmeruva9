@@ -10,8 +10,18 @@ async function executeSELECTQuery(query) {
     // Apply WHERE clause filtering
     const filteredData = whereClauses.length > 0
         ? data.filter(row => whereClauses.every(clause => {
-            // You can expand this to handle different operators
-            return row[clause.field] === clause.value;
+            // Handle different operators
+            switch (clause.operator) {
+                case '=':
+                    return row[clause.field] === clause.value;
+                case '>':
+                    return row[clause.field] > clause.value;
+                case '!=':
+                    return row[clause.field] !== clause.value;
+                // Add more cases for other operators if needed
+                default:
+                    return false;
+            }
         }))
         : data;
 
