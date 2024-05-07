@@ -16,7 +16,7 @@ function readCSV(filePath) {
             .on('error', (error) => {
                 reject(error);
             });
-    });
+    },10000);
 }
 
 module.exports = readCSV;
