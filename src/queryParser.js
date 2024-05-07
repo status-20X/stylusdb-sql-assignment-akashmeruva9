@@ -1,22 +1,28 @@
-// src/csvReader.js
+// src/queryParser.js
 
-const fs = require('fs');
-const csv = require('csv-parser');
+function parseQuery(query) {
+    const selectRegex = /SELECT (.+?) FROM (.+?)(?: WHERE (.*))?$/i;
+    const match = query.match(selectRegex);
 
-function readCSV(filePath) {
-    const results = [];
-
-    return new Promise((resolve, reject) => {
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', () => {
-                resolve(results);
-            })
-            .on('error', (error) => {
-                reject(error);
-            });
-    },10000);
+    if (match) {
+        const [, fields, table, whereString] = match;
+        const whereClauses = whereString ? parseWhereClause(whereString) : [];
+        return {
+            fields: fields.split(',').map(field => field.trim()),
+            table: table.trim(),
+            whereClauses
+        };
+    } else {
+        throw new Error('Invalid query format');
+    }
 }
 
-module.exports = readCSV;
+function parseWhereClause(whereString) {
+    const conditions = whereString.split(/ AND | OR /i);
+    return conditions.map(condition => {
+        const [field, operator, value] = condition.split(/\s+/);
+        return { field, operator, value };
+    });
+}
+
+module.exports = parseQuery;
